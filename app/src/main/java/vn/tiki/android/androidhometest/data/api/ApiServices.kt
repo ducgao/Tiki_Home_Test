@@ -13,8 +13,8 @@ import java.util.Calendar
 
 class ApiServices(private val context: Context) {
   companion object {
-    const val INCREASING_SECONDS = 15
-    const val DURATION = 60 // 1 minute
+    const val INCREASING_SECONDS = 5
+    const val DURATION = 10 // 1 minute
     const val ASSERT_FILE_PATTERN = "file:///android_asset"
   }
 

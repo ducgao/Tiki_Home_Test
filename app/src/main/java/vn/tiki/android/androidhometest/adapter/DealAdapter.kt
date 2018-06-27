@@ -22,14 +22,15 @@ class DealAdapter(private val items: ArrayList<Deal>, private val context: Conte
 
     override fun onBindViewHolder(holder: DealViewHolder, position: Int) {
         holder.setData(items[position], context)
-        holder.setRequestRemoveCallback(position, this)
+        holder.setRequestRemoveCallback(this)
     }
 
-    override fun removeItem(itemIndex: Int?) {
+    override fun removeItem(item: Deal) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
-            items.removeAt(itemIndex!!)
-            notifyItemRemoved(itemIndex)
+            val indexOfItem = items.indexOf(item)
+            items.remove(item)
+            notifyItemRemoved(indexOfItem)
         }
     }
 }

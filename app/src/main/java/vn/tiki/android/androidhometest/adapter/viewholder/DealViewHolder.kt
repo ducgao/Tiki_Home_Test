@@ -17,10 +17,12 @@ class DealViewHolder (view: View) : RecyclerView.ViewHolder(view), OnCountDownEn
     private val tvPrice = view.tv_price
     private val tvCountDown = view.tv_countdown
 
-    private var itemIndex : Int? = null
+    private var data : Deal? = null
     private var removeCallback : RemoveCallback? = null
 
     fun setData (data: Deal, context: Context) {
+        this.data = data
+
         setName(data.productName)
         setPrice(data.productPrice)
         setImage(data.productThumbnail, context)
@@ -28,8 +30,7 @@ class DealViewHolder (view: View) : RecyclerView.ViewHolder(view), OnCountDownEn
         tvCountDown.setRefTime(data.endDate.time, this)
     }
 
-    fun setRequestRemoveCallback(position: Int, removeCallback: RemoveCallback) {
-        this.itemIndex = position
+    fun setRequestRemoveCallback(removeCallback: RemoveCallback) {
         this.removeCallback = removeCallback
     }
 
@@ -48,6 +49,6 @@ class DealViewHolder (view: View) : RecyclerView.ViewHolder(view), OnCountDownEn
     }
 
     override fun onCountDownEnd() {
-        removeCallback?.removeItem(itemIndex)
+        removeCallback?.removeItem(data!!)
     }
 }
