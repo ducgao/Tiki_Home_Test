@@ -15,7 +15,6 @@ import vn.tiki.android.androidhometest.di.releaseDependencies
 
 class MainActivity : AppCompatActivity() {
 
-  private var isCountDownNeeded = false
   val apiServices by inject<ApiServices>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +28,11 @@ class MainActivity : AppCompatActivity() {
 
   override fun onResume() {
     super.onResume()
-    isCountDownNeeded = true;
     getDeals()
   }
 
   override fun onPause() {
     super.onPause()
-    isCountDownNeeded = false;
   }
 
   override fun onDestroy() {
@@ -52,21 +49,8 @@ class MainActivity : AppCompatActivity() {
       override fun onPostExecute(result: ArrayList<Deal>) {
         super.onPostExecute(result)
         rv_deals.adapter = DealAdapter(result, this@MainActivity)
-        startCountDown()
       }
     }.execute()
-  }
-
-  private fun startCountDown() {
-    val handler = Handler()
-    handler.postDelayed(object : Runnable {
-      override fun run() {
-        if (isCountDownNeeded) {
-          rv_deals.adapter.notifyDataSetChanged()
-          handler.postDelayed(this, 1000)
-        }
-      }
-    }, 1000)
   }
 }
 

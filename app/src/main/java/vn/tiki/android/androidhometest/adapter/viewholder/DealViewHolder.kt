@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.layout_deal_item.view.*
 import vn.tiki.android.androidhometest.data.api.response.Deal
+import vn.tiki.android.androidhometest.util.CountDownTextView
+import vn.tiki.android.androidhometest.util.OnCountDownEnd
 import vn.tiki.android.androidhometest.util.RemoveCallback
 import java.util.*
 
-class DealViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+class DealViewHolder (view: View) : RecyclerView.ViewHolder(view), OnCountDownEnd {
     private val ivThumbnail = view.iv_thumbnail
     private val tvName = view.tv_name
     private val tvPrice = view.tv_price
@@ -23,7 +25,7 @@ class DealViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         setPrice(data.productPrice)
         setImage(data.productThumbnail, context)
 
-        handleCountDown(data.endDate)
+        tvCountDown.setRefTime(data.endDate.time, this)
     }
 
     fun setRequestRemoveCallback(position: Int, removeCallback: RemoveCallback) {
@@ -45,28 +47,7 @@ class DealViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         ivThumbnail.setImageDrawable(drawable)
     }
 
-    private fun handleCountDown(endDate: Date) {
-        val now = Date()
-        val timeLeft = endDate.time - now.time
-
-        if (timeLeft < 1000) {
-            removeCallback?.removeItem(itemIndex)
-        }
-        else {
-            setCountDown(timeLeft)
-        }
-    }
-
-    private fun setCountDown(timeLeft: Long) {
-        tvCountDown.text = getDownTime(timeLeft / 1000)
-    }
-
-    private fun getDownTime(second: Long): String {
-        val days = second / 60 / 60 / 24
-        val hours = second / 60 / 60
-        val minutes = second / 60
-        val seconds = second % 60
-
-        return String.format("%d days %02d:%02d:%02d", days, hours, minutes, seconds)
+    override fun onCountDownEnd() {
+        removeCallback?.removeItem(itemIndex)
     }
 }
