@@ -24,15 +24,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     rv_deals.layoutManager = GridLayoutManager(this, 2)
-  }
-
-  override fun onResume() {
-    super.onResume()
     getDeals()
-  }
-
-  override fun onPause() {
-    super.onPause()
   }
 
   override fun onDestroy() {
