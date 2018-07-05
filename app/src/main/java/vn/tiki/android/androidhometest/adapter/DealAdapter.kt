@@ -21,7 +21,7 @@ class DealAdapter(private val items: ArrayList<Deal>, private val context: Conte
     }
 
     override fun onBindViewHolder(holder: DealViewHolder, position: Int) {
-        holder.setData(items[position], context)
+        holder.setData(items[position])
         holder.setRequestRemoveCallback(this)
     }
 

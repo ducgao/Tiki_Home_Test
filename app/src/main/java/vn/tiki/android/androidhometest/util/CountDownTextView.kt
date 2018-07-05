@@ -20,11 +20,11 @@ class CountDownTextView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.layout_count_down_text_view, this, true)
     }
 
-    private var onCountDownEnd : OnCountDownEnd? = null
+    private var onCountDownEnd : CountDownEndCallback? = null
     private var originalTime: Long? = null
     private var isStopRequest = true
 
-    fun setRefTime(millisecond: Long, onCountDownEnd: OnCountDownEnd) {
+    fun setRefTime(millisecond: Long, onCountDownEnd: CountDownEndCallback) {
         this.onCountDownEnd = onCountDownEnd
         this.originalTime = millisecond
 

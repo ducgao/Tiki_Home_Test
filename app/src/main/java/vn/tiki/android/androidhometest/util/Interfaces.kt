@@ -6,6 +6,10 @@ interface RemoveCallback {
     fun removeItem(itemIndex: Deal)
 }
 
-interface OnCountDownEnd {
+interface CountDownEndCallback {
     fun onCountDownEnd()
+}
+
+interface DownloadDealsCallback {
+    fun onDeals(deals: ArrayList<Deal>)
 }

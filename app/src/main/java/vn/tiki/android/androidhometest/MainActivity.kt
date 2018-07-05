@@ -12,10 +12,12 @@ import vn.tiki.android.androidhometest.data.api.response.Deal
 import vn.tiki.android.androidhometest.di.initDependencies
 import vn.tiki.android.androidhometest.di.inject
 import vn.tiki.android.androidhometest.di.releaseDependencies
+import vn.tiki.android.androidhometest.util.DownloadDealsCallback
 
 class MainActivity : AppCompatActivity() {
 
-  val apiServices by inject<ApiServices>()
+  private val apiServices by inject<ApiServices>()
+  private var getDealsWork : GetDealsWork? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,20 +31,37 @@ class MainActivity : AppCompatActivity() {
 
   override fun onDestroy() {
     super.onDestroy()
+    this.getDealsWork?.setCallback(null)
     releaseDependencies()
   }
 
   private fun getDeals() {
-    object : AsyncTask<Unit, Unit, ArrayList<Deal>>() {
-      override fun doInBackground(vararg params: Unit?): ArrayList<Deal> {
-        return apiServices.getDeals()
+    this.getDealsWork = GetDealsWork(apiServices)
+    this.getDealsWork?.setCallback(object : DownloadDealsCallback {
+      override fun onDeals(deals: ArrayList<Deal>) {
+        rv_deals.adapter = DealAdapter(deals, this@MainActivity)
       }
+    })
 
-      override fun onPostExecute(result: ArrayList<Deal>) {
-        super.onPostExecute(result)
-        rv_deals.adapter = DealAdapter(result, this@MainActivity)
-      }
-    }.execute()
+    this.getDealsWork?.execute();
+  }
+
+  class GetDealsWork(private val apiServices: ApiServices) : AsyncTask<Unit, Unit, ArrayList<Deal>>() {
+
+    private var dealsCallback : DownloadDealsCallback? = null;
+
+    fun setCallback(dealsCallback: DownloadDealsCallback?) {
+      this.dealsCallback = dealsCallback;
+    }
+
+    override fun doInBackground(vararg params: Unit?): ArrayList<Deal> {
+      return apiServices.getDeals()
+    }
+
+    override fun onPostExecute(result: ArrayList<Deal>) {
+      super.onPostExecute(result)
+      dealsCallback?.onDeals(result)
+    }
   }
 }
 
